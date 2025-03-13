@@ -40,7 +40,6 @@ public class PlayerServlet extends HttpServlet {
             rd.forward(request, response);
         }
     }
-
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String idStr = request.getParameter("id");
         String name = request.getParameter("name");
@@ -71,17 +70,24 @@ public class PlayerServlet extends HttpServlet {
         p.setIndexId(indexId);
         p.setValue(value);
 
+        String message;
         if (idStr != null && !idStr.isEmpty()) {
             // Cập nhật
             int id = Integer.parseInt(idStr);
             p.setId(id);
             dao.updatePlayer(p);
+            message = "Cập nhật cầu thủ thành công!";
         } else {
             // Thêm mới
             dao.insertPlayer(p);
+            message = "Thêm cầu thủ thành công!";
         }
 
-        response.sendRedirect("player");
+        List<Player> list = dao.getAllPlayers();
+        request.setAttribute("players", list);
+        request.setAttribute("success", message);
+        RequestDispatcher rd = request.getRequestDispatcher("Show.jsp");
+        rd.forward(request, response);
     }
 }
 

@@ -52,6 +52,9 @@
     <c:if test="${not empty error}">
         <div class="alert alert-danger text-center">${error}</div>
     </c:if>
+    <c:if test="${not empty success}">
+        <div class="alert alert-success text-center">${success}</div>
+    </c:if>
 
     <form class="row g-3 mb-4" action="player" method="post">
         <c:if test="${not empty editPlayer}">
