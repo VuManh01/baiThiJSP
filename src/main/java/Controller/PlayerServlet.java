@@ -1,6 +1,7 @@
 package Controller;
 
 import Dao.PlayerDAO;
+import Model.Indexer;
 import Model.Player;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
@@ -30,15 +31,25 @@ public class PlayerServlet extends HttpServlet {
             request.setAttribute("editPlayer", p);
             List<Player> list = dao.getAllPlayers();
             request.setAttribute("players", list);
+
+            List<Indexer> indexers = dao.getAllIndexers();
+            request.setAttribute("indexers", indexers);
+
             RequestDispatcher rd = request.getRequestDispatcher("Show.jsp");
             rd.forward(request, response);
 
         } else {
             List<Player> list = dao.getAllPlayers();
             request.setAttribute("players", list);
+
+            List<Indexer> indexers = dao.getAllIndexers();
+            request.setAttribute("indexers", indexers);
+
             RequestDispatcher rd = request.getRequestDispatcher("Show.jsp");
             rd.forward(request, response);
         }
+
+
     }
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String idStr = request.getParameter("id");
@@ -86,8 +97,13 @@ public class PlayerServlet extends HttpServlet {
         List<Player> list = dao.getAllPlayers();
         request.setAttribute("players", list);
         request.setAttribute("success", message);
+
+        List<Indexer> indexers = dao.getAllIndexers();
+        request.setAttribute("indexers", indexers);
+
         RequestDispatcher rd = request.getRequestDispatcher("Show.jsp");
         rd.forward(request, response);
+
     }
 }
 

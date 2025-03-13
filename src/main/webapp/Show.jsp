@@ -70,20 +70,25 @@
                    value="${editPlayer != null ? editPlayer.age : ''}">
         </div>
         <div class="col-md-3">
-            <select name="index_id" class="form-select">
+            <select name="index_id" id="indexSelect" class="form-select">
                 <option disabled ${editPlayer == null ? 'selected' : ''}>Index name</option>
-                <option value="1" ${editPlayer != null && editPlayer.indexId == 1 ? 'selected' : ''}>Speed</option>
-                <option value="2" ${editPlayer != null && editPlayer.indexId == 2 ? 'selected' : ''}>Strength</option>
-                <option value="3" ${editPlayer != null && editPlayer.indexId == 3 ? 'selected' : ''}>Accurate</option>
+                <c:forEach var="i" items="${indexers}">
+                    <option value="${i.id}"
+                            data-min="${i.valueMin}"
+                            data-max="${i.valueMax}"
+                        ${editPlayer != null && editPlayer.indexId == i.id ? 'selected' : ''}>
+                            ${i.name}
+                    </option>
+                </c:forEach>
             </select>
+
         </div>
         <div class="col-md-2">
-            <select name="value" class="form-select">
-                <option disabled ${editPlayer == null ? 'selected' : ''}>Value</option>
-                <option value="90" ${editPlayer != null && editPlayer.value == 90 ? 'selected' : ''}>90</option>
-                <option value="1" ${editPlayer != null && editPlayer.value == 1 ? 'selected' : ''}>1</option>
+            <select id="value" name="value" class="form-select">
+                <option disabled selected>Value</option>
             </select>
         </div>
+
         <div class="col-md-1 d-grid">
             <button type="submit" class="btn btn-orange">
                 <c:choose>
@@ -131,6 +136,43 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    const indexSelect = document.getElementById('indexSelect');
+    const valueSelect = document.getElementById('value');
+
+    function generateValues(min, max, selectedVal) {
+        valueSelect.innerHTML = '';
+        for (let i = min; i <= max; i++) {
+            const opt = document.createElement('option');
+            opt.value = i;
+            opt.text = i;
+            if (selectedVal && selectedVal == i) {
+                opt.selected = true;
+            }
+            valueSelect.appendChild(opt);
+        }
+    }
+
+    indexSelect.addEventListener('change', function () {
+        const selected = indexSelect.options[indexSelect.selectedIndex];
+        const min = parseFloat(selected.getAttribute('data-min'));
+        const max = parseFloat(selected.getAttribute('data-max'));
+        generateValues(min, max);
+    });
+
+    // Nếu đang edit thì tự động tạo value luôn
+    window.onload = function () {
+        const selected = indexSelect.options[indexSelect.selectedIndex];
+        if (selected) {
+            const min = parseFloat(selected.getAttribute('data-min'));
+            const max = parseFloat(selected.getAttribute('data-max'));
+            const currentVal = "${editPlayer != null ? editPlayer.value : ''}";
+            generateValues(min, max, currentVal);
+        }
+    }
+</script>
+
+
 </body>
 </html>
 

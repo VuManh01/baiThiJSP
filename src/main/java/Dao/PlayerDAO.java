@@ -1,5 +1,6 @@
 package Dao;
 
+import Model.Indexer;
 import Model.Player;
 import Util.DatabaseConnection;
 import java.sql.*;
@@ -130,6 +131,26 @@ public class PlayerDAO {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public List<Indexer> getAllIndexers() {
+        List<Indexer> list = new ArrayList<>();
+        String sql = "SELECT * FROM indexer";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                Indexer i = new Indexer();
+                i.setId(rs.getInt("index_id"));
+                i.setName(rs.getString("name"));
+                i.setValueMin(rs.getFloat("valueMin"));
+                i.setValueMax(rs.getFloat("valueMax"));
+                list.add(i);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
     }
 
     // Có thể thêm các phương thức update/getById nếu cần
